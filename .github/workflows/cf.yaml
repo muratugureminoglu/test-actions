@@ -12,7 +12,7 @@ jobs:
     env:
       AWS_REGION: us-east-1
       STACK_NAME: my-stack
-      TEMPLATE_FILE: path/to/your/template.yaml
+      TEMPLATE_FILE: ${{ github.workspace }}/antmedia-aws-autoscale-template.yaml
 
     steps:
       - name: Checkout Repository
