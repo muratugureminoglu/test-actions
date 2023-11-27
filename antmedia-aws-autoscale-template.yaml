@@ -437,12 +437,14 @@ Resources:
 
   RTMPLoadBalancer:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    DependsOn: InternetGatewayAttachment
     Properties:
       Subnets:
       - !Ref OriginZone
       Type: 'network'
   RTMPListener:
     Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    DependsOn: InternetGatewayAttachment
     Properties:
       DefaultActions:
         - Type: forward
