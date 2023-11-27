@@ -49,4 +49,13 @@ jobs:
 
       - name: Display Stack Outputs
         run: |
-          aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query 'Stacks[0].Outputs'
+          outputs=$(aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query 'Stacks[0].Outputs' 2>&1)
+          status=$?
+          
+          if [ $status -ne 0 ]; then
+            echo "Failed to describe stack: $outputs"
+            exit 1
+          else
+            echo "Stack Outputs: $outputs"
+          fi
+
