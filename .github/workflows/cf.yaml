@@ -46,7 +46,7 @@ jobs:
                          ParameterKey=AntMediaEdgeCapacity,ParameterValue=1 \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }}
-          sleep 300
+          sleep 420
 
       - name: Display Stack Outputs
         run: |
