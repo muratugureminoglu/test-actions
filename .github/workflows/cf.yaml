@@ -1,0 +1,24 @@
+name: CloudFormation Deployment
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get install -y unzip
+        curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+
+    - name: Validate CloudFormation Template
+      run: aws cloudformation validate-template --template-body file://${{ github.workspace }}/antmedia-aws-autoscale-template.yaml
