@@ -46,22 +46,36 @@ jobs:
                          ParameterKey=AntMediaEdgeCapacity,ParameterValue=1 \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --region ${{ env.AWS_REGION }}
-          sleep 420
 
       - name: Display Stack Outputs
         run: |
-          outputs=$(aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query 'Stacks[0].Outputs' 2>&1)
-          status=$?
-          
-          if [ $status -ne 0 ]; then
-            echo "Failed to describe stack: $outputs"
-            exit 1
-          elif [ "$outputs" == "null" ]; then
-            echo "Stack Outputs are null. Deployment failed."
-            exit 1
-          else
-            echo "Stack Outputs: $outputs"
-          fi
+          timeout=$((SECONDS+420))
+          while [ $SECONDS -lt $timeout ]; do
+            sleep 10
+            stack_status=$(aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query 'Stacks[0].StackStatus' --output text 2>&1)
+            if [ "$stack_status" == "CREATE_COMPLETE" ]; then
+              echo "Stack creation completed successfully."
+      
+              # Display Stack Outputs
+              outputs=$(aws cloudformation describe-stacks --stack-name ${{ env.STACK_NAME }} --query 'Stacks[0].Outputs' 2>&1)
+              status=$?
+              
+              if [ $status -ne 0 ]; then
+                echo "Failed to describe stack: $outputs"
+                exit 1
+              elif [ "$outputs" == "null" ]; then
+                echo "Stack Outputs are null. Deployment failed."
+                exit 1
+              else
+                echo "Stack Outputs: $outputs"
+              fi
+      
+              break
+            elif [ "$stack_status" == "ROLLBACK_COMPLETE" ] || [ "$stack_status" == "CREATE_FAILED" ]; then
+              echo "Stack creation failed or rolled back."
+              exit 1
+            fi
+          done
       - name: Delete Stack
         if: ${{ always() }}
         run: |
