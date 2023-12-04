@@ -1,6 +1,7 @@
 name: Ant Media Server AWS CloudFormation Deployment
 
 on:
+  workflow_dispatch:
 #  schedule:
 #    - cron: '0 0 * * 1'
 
