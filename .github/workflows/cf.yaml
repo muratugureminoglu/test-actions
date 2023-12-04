@@ -1,6 +1,6 @@
 name: Ant Media Server AWS CloudFormation Deployment
 
-#on:
+on:
 #  schedule:
 #    - cron: '0 0 * * 1'
 
