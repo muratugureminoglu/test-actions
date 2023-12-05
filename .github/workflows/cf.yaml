@@ -72,8 +72,8 @@ jobs:
           else
             echo "Stack Outputs: $outputs"
           fi
-#      - name: Delete Stack
-#        if: ${{ always() }}
-#        run: |
-#          aws cloudformation delete-stack --stack-name ${{ env.STACK_NAME }}
-#          aws cloudformation wait stack-delete-complete --stack-name ${{ env.STACK_NAME }}
+      - name: Delete Stack
+        if: ${{ always() }}
+        run: |
+          aws cloudformation delete-stack --stack-name ${{ env.STACK_NAME }}
+          aws cloudformation wait stack-delete-complete --stack-name ${{ env.STACK_NAME }}
